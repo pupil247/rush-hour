@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Rush Hour</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.169.0/build/three.module.js"
+        }
+      }
+    </script>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b1220;
+        --panel: #16233a;
+        --panel-2: #1e2e49;
+        --ink: #eaf1fb;
+        --muted: #9fb2cc;
+        --accent: #d21f2a;
+        --accent-2: #3aa0ff;
+        --ok: #42d392;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; }
+      body {
+        background: radial-gradient(1200px 800px at 50% -10%, #16233a, var(--bg));
+        color: var(--ink);
+        font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      }
+      #app { min-height: 100vh; }
+      button { font: inherit; }
+      .btn {
+        background: var(--panel-2);
+        color: var(--ink);
+        border: 1px solid #2e446b;
+        border-radius: 10px;
+        padding: 0.45rem 0.8rem;
+        cursor: pointer;
+      }
+      .btn:hover:not(:disabled) { background: #27405f; }
+      .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+      .btn.primary { background: var(--accent); border-color: #ff5a63; }
+
+      /* Roadmap */
+      #screen { padding: clamp(1rem, 4vw, 3rem); max-width: 900px; margin: 0 auto; }
+      .roadmap-wrap h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); margin: 0 0 0.2rem; }
+      .roadmap-wrap h2 { font-weight: 500; color: var(--muted); margin: 0 0 0.4rem; }
+      .roadmap-wrap .hint { color: var(--muted); margin: 0 0 1.5rem; }
+      .region { margin-bottom: 1.4rem; }
+      .region h3 {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.78rem;
+        color: var(--accent-2);
+        margin: 0 0 0.5rem;
+      }
+      .roadmap { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+      .stop {
+        display: grid;
+        grid-template-columns: 1.8rem 1fr auto;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.6rem 0.8rem;
+        background: var(--panel);
+        border: 1px solid #22344f;
+        border-radius: 12px;
+      }
+      .stop.unlocked { cursor: pointer; }
+      .stop.unlocked:hover { border-color: var(--accent-2); }
+      .stop.current { border-color: var(--accent-2); box-shadow: 0 0 0 2px rgba(58, 160, 255, 0.25); }
+      .stop.locked { opacity: 0.55; }
+      .stop.solved .stop-meta { color: var(--ok); }
+      .stop-name { font-weight: 600; }
+      .stop-meta { color: var(--muted); font-size: 0.85rem; }
+      .token { font-size: 1.2rem; text-align: center; }
+
+      /* Game */
+      #game { position: fixed; inset: 0; }
+      #scene { display: block; width: 100%; height: 100%; outline: none; }
+      #hud {
+        position: absolute;
+        inset: 0 0 auto 0;
+        padding: 0.6rem clamp(0.6rem, 2vw, 1.2rem);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        justify-content: space-between;
+        align-items: center;
+        pointer-events: none;
+      }
+      .hud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+      .hud-counters { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+      .hud-stat { background: rgba(11, 18, 32, 0.72); padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.9rem; }
+      .hud-controls { display: flex; flex-wrap: wrap; gap: 0.4rem; pointer-events: auto; }
+
+      /* Dialogs */
+      .dialog-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(4, 8, 16, 0.62);
+        display: grid;
+        place-items: center;
+        padding: 1rem;
+        z-index: 10;
+      }
+      .dialog {
+        background: var(--panel);
+        border: 1px solid #2e446b;
+        border-radius: 16px;
+        padding: 1.4rem 1.6rem;
+        max-width: 420px;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      .dialog h2 { margin: 0 0 0.6rem; }
+      .dialog p { margin: 0.3rem 0; color: var(--muted); }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 2rem;
+        transform: translateX(-50%);
+        background: var(--panel-2);
+        border: 1px solid #2e446b;
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        z-index: 20;
+      }
+    </style>
+  </head>
+  <body>
+    <main id="app">
+      <section id="screen"></section>
+      <section id="game" hidden>
+        <canvas id="scene"></canvas>
+        <div id="hud"></div>
+      </section>
+    </main>
+    <div id="dialogs"></div>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rush-hour.local/challenges.schema.json",
+  "title": "Rush Hour Challenge Catalog",
+  "description": "The catalog of puzzles loaded from challenges.json. Structural rules are enforced here; rule-based validation (overlap, alignment, optimality) is enforced by src/core/schema.js.",
+  "type": "object",
+  "required": ["version", "challenges"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "challenges": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": { "$ref": "#/$defs/challenge" }
+    }
+  },
+  "$defs": {
+    "vehicle": {
+      "type": "object",
+      "required": ["id", "kind", "orientation", "row", "col", "isRed"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["car", "truck"] },
+        "orientation": { "enum": ["H", "V"] },
+        "row": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "col": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "isRed": { "type": "boolean" }
+      }
+    },
+    "move": {
+      "type": "object",
+      "required": ["vehicleId", "delta"],
+      "additionalProperties": false,
+      "properties": {
+        "vehicleId": { "type": "string", "minLength": 1 },
+        "delta": {
+          "type": "integer",
+          "minimum": -5,
+          "maximum": 5,
+          "not": { "const": 0 }
+        }
+      }
+    },
+    "challenge": {
+      "type": "object",
+      "required": ["id", "name", "difficulty", "vehicles", "solution", "optimalMoveCount"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "difficulty": {
+          "enum": ["Débutant", "Intermédiaire", "Avancé", "Expert", "Génie"]
+        },
+        "vehicles": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/vehicle" }
+        },
+        "solution": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/move" }
+        },
+        "optimalMoveCount": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

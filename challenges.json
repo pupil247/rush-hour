@@ -1,0 +1,1097 @@
+{
+  "version": 1,
+  "challenges": [
+    {
+      "id": "defi-01",
+      "name": "Premier virage",
+      "difficulty": "Débutant",
+      "vehicles": [
+        {
+          "id": "R",
+          "kind": "car",
+          "orientation": "H",
+          "row": 3,
+          "col": 4,
+          "isRed": true
+        },
+        {
+          "id": "v2",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 4,
+          "col": 3,
+          "isRed": false
+        },
+        {
+          "id": "v3",
+          "kind": "car",
+          "orientation": "H",
+          "row": 1,
+          "col": 2,
+          "isRed": false
+        },
+        {
+          "id": "v5",
+          "kind": "car",
+          "orientation": "H",
+          "row": 2,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v6",
+          "kind": "car",
+          "orientation": "H",
+          "row": 6,
+          "col": 3,
+          "isRed": false
+        },
+        {
+          "id": "v7",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 2,
+          "col": 6,
+          "isRed": false
+        },
+        {
+          "id": "v15",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 2,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v26",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 5,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v27",
+          "kind": "car",
+          "orientation": "H",
+          "row": 6,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v29",
+          "kind": "car",
+          "orientation": "V",
+          "row": 3,
+          "col": 2,
+          "isRed": false
+        }
+      ],
+      "solution": [
+        {
+          "vehicleId": "v26",
+          "delta": -3
+        },
+        {
+          "vehicleId": "v7",
+          "delta": 2
+        },
+        {
+          "vehicleId": "R",
+          "delta": 3
+        }
+      ],
+      "optimalMoveCount": 3
+    },
+    {
+      "id": "defi-02",
+      "name": "Embouteillage",
+      "difficulty": "Débutant",
+      "vehicles": [
+        {
+          "id": "R",
+          "kind": "car",
+          "orientation": "H",
+          "row": 3,
+          "col": 3,
+          "isRed": true
+        },
+        {
+          "id": "v1",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 2,
+          "col": 2,
+          "isRed": false
+        },
+        {
+          "id": "v2",
+          "kind": "car",
+          "orientation": "V",
+          "row": 3,
+          "col": 5,
+          "isRed": false
+        },
+        {
+          "id": "v6",
+          "kind": "car",
+          "orientation": "H",
+          "row": 6,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v9",
+          "kind": "car",
+          "orientation": "V",
+          "row": 2,
+          "col": 6,
+          "isRed": false
+        },
+        {
+          "id": "v12",
+          "kind": "car",
+          "orientation": "H",
+          "row": 1,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v16",
+          "kind": "car",
+          "orientation": "V",
+          "row": 4,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v20",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 1,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v22",
+          "kind": "car",
+          "orientation": "V",
+          "row": 5,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v47",
+          "kind": "car",
+          "orientation": "V",
+          "row": 4,
+          "col": 6,
+          "isRed": false
+        },
+        {
+          "id": "v52",
+          "kind": "car",
+          "orientation": "V",
+          "row": 5,
+          "col": 3,
+          "isRed": false
+        },
+        {
+          "id": "v82",
+          "kind": "car",
+          "orientation": "V",
+          "row": 5,
+          "col": 2,
+          "isRed": false
+        },
+        {
+          "id": "v87",
+          "kind": "car",
+          "orientation": "V",
+          "row": 2,
+          "col": 1,
+          "isRed": false
+        }
+      ],
+      "solution": [
+        {
+          "vehicleId": "v2",
+          "delta": 1
+        },
+        {
+          "vehicleId": "v9",
+          "delta": -1
+        },
+        {
+          "vehicleId": "R",
+          "delta": 4
+        }
+      ],
+      "optimalMoveCount": 3
+    },
+    {
+      "id": "defi-03",
+      "name": "Carrefour",
+      "difficulty": "Intermédiaire",
+      "vehicles": [
+        {
+          "id": "R",
+          "kind": "car",
+          "orientation": "H",
+          "row": 3,
+          "col": 3,
+          "isRed": true
+        },
+        {
+          "id": "v1",
+          "kind": "car",
+          "orientation": "V",
+          "row": 4,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v2",
+          "kind": "car",
+          "orientation": "V",
+          "row": 1,
+          "col": 5,
+          "isRed": false
+        },
+        {
+          "id": "v7",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 2,
+          "col": 2,
+          "isRed": false
+        },
+        {
+          "id": "v8",
+          "kind": "car",
+          "orientation": "V",
+          "row": 1,
+          "col": 3,
+          "isRed": false
+        },
+        {
+          "id": "v11",
+          "kind": "car",
+          "orientation": "H",
+          "row": 4,
+          "col": 5,
+          "isRed": false
+        },
+        {
+          "id": "v15",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 6,
+          "col": 3,
+          "isRed": false
+        },
+        {
+          "id": "v21",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 1,
+          "col": 6,
+          "isRed": false
+        },
+        {
+          "id": "v27",
+          "kind": "car",
+          "orientation": "H",
+          "row": 6,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v37",
+          "kind": "car",
+          "orientation": "V",
+          "row": 1,
+          "col": 4,
+          "isRed": false
+        }
+      ],
+      "solution": [
+        {
+          "vehicleId": "v11",
+          "delta": -2
+        },
+        {
+          "vehicleId": "v21",
+          "delta": 3
+        },
+        {
+          "vehicleId": "R",
+          "delta": 4
+        }
+      ],
+      "optimalMoveCount": 3
+    },
+    {
+      "id": "defi-04",
+      "name": "Détour",
+      "difficulty": "Intermédiaire",
+      "vehicles": [
+        {
+          "id": "R",
+          "kind": "car",
+          "orientation": "H",
+          "row": 3,
+          "col": 2,
+          "isRed": true
+        },
+        {
+          "id": "v2",
+          "kind": "car",
+          "orientation": "H",
+          "row": 1,
+          "col": 2,
+          "isRed": false
+        },
+        {
+          "id": "v4",
+          "kind": "car",
+          "orientation": "V",
+          "row": 4,
+          "col": 5,
+          "isRed": false
+        },
+        {
+          "id": "v5",
+          "kind": "car",
+          "orientation": "V",
+          "row": 5,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v6",
+          "kind": "car",
+          "orientation": "V",
+          "row": 2,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v8",
+          "kind": "car",
+          "orientation": "V",
+          "row": 2,
+          "col": 5,
+          "isRed": false
+        },
+        {
+          "id": "v12",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 1,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v14",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 4,
+          "col": 6,
+          "isRed": false
+        }
+      ],
+      "solution": [
+        {
+          "vehicleId": "v8",
+          "delta": -1
+        },
+        {
+          "vehicleId": "v12",
+          "delta": 3
+        },
+        {
+          "vehicleId": "R",
+          "delta": 5
+        }
+      ],
+      "optimalMoveCount": 3
+    },
+    {
+      "id": "defi-05",
+      "name": "Boulevard",
+      "difficulty": "Intermédiaire",
+      "vehicles": [
+        {
+          "id": "R",
+          "kind": "car",
+          "orientation": "H",
+          "row": 3,
+          "col": 3,
+          "isRed": true
+        },
+        {
+          "id": "v1",
+          "kind": "car",
+          "orientation": "H",
+          "row": 5,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v3",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 1,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v12",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 1,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v13",
+          "kind": "car",
+          "orientation": "V",
+          "row": 5,
+          "col": 3,
+          "isRed": false
+        },
+        {
+          "id": "v15",
+          "kind": "car",
+          "orientation": "H",
+          "row": 6,
+          "col": 5,
+          "isRed": false
+        },
+        {
+          "id": "v16",
+          "kind": "car",
+          "orientation": "H",
+          "row": 6,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v19",
+          "kind": "car",
+          "orientation": "H",
+          "row": 2,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v31",
+          "kind": "car",
+          "orientation": "H",
+          "row": 4,
+          "col": 3,
+          "isRed": false
+        },
+        {
+          "id": "v35",
+          "kind": "car",
+          "orientation": "H",
+          "row": 4,
+          "col": 5,
+          "isRed": false
+        },
+        {
+          "id": "v36",
+          "kind": "car",
+          "orientation": "V",
+          "row": 2,
+          "col": 6,
+          "isRed": false
+        },
+        {
+          "id": "v48",
+          "kind": "car",
+          "orientation": "V",
+          "row": 5,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v78",
+          "kind": "car",
+          "orientation": "V",
+          "row": 1,
+          "col": 2,
+          "isRed": false
+        }
+      ],
+      "solution": [
+        {
+          "vehicleId": "v3",
+          "delta": -1
+        },
+        {
+          "vehicleId": "v36",
+          "delta": -1
+        },
+        {
+          "vehicleId": "R",
+          "delta": 4
+        }
+      ],
+      "optimalMoveCount": 3
+    },
+    {
+      "id": "defi-06",
+      "name": "Périphérique",
+      "difficulty": "Avancé",
+      "vehicles": [
+        {
+          "id": "R",
+          "kind": "car",
+          "orientation": "H",
+          "row": 3,
+          "col": 2,
+          "isRed": true
+        },
+        {
+          "id": "v3",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 1,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v8",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 3,
+          "col": 5,
+          "isRed": false
+        },
+        {
+          "id": "v9",
+          "kind": "car",
+          "orientation": "V",
+          "row": 2,
+          "col": 6,
+          "isRed": false
+        },
+        {
+          "id": "v10",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 4,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v11",
+          "kind": "car",
+          "orientation": "V",
+          "row": 5,
+          "col": 6,
+          "isRed": false
+        },
+        {
+          "id": "v24",
+          "kind": "car",
+          "orientation": "V",
+          "row": 1,
+          "col": 2,
+          "isRed": false
+        },
+        {
+          "id": "v25",
+          "kind": "car",
+          "orientation": "V",
+          "row": 5,
+          "col": 3,
+          "isRed": false
+        },
+        {
+          "id": "v27",
+          "kind": "car",
+          "orientation": "H",
+          "row": 2,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v38",
+          "kind": "car",
+          "orientation": "V",
+          "row": 5,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v124",
+          "kind": "car",
+          "orientation": "H",
+          "row": 6,
+          "col": 1,
+          "isRed": false
+        }
+      ],
+      "solution": [
+        {
+          "vehicleId": "v3",
+          "delta": -1
+        },
+        {
+          "vehicleId": "v8",
+          "delta": 1
+        },
+        {
+          "vehicleId": "v9",
+          "delta": -1
+        },
+        {
+          "vehicleId": "R",
+          "delta": 5
+        }
+      ],
+      "optimalMoveCount": 4
+    },
+    {
+      "id": "defi-07",
+      "name": "Échangeur",
+      "difficulty": "Avancé",
+      "vehicles": [
+        {
+          "id": "R",
+          "kind": "car",
+          "orientation": "H",
+          "row": 3,
+          "col": 1,
+          "isRed": true
+        },
+        {
+          "id": "v1",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 3,
+          "col": 5,
+          "isRed": false
+        },
+        {
+          "id": "v2",
+          "kind": "car",
+          "orientation": "H",
+          "row": 4,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v3",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 1,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v5",
+          "kind": "car",
+          "orientation": "V",
+          "row": 2,
+          "col": 6,
+          "isRed": false
+        },
+        {
+          "id": "v6",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 2,
+          "col": 2,
+          "isRed": false
+        },
+        {
+          "id": "v11",
+          "kind": "car",
+          "orientation": "H",
+          "row": 1,
+          "col": 2,
+          "isRed": false
+        },
+        {
+          "id": "v12",
+          "kind": "car",
+          "orientation": "V",
+          "row": 4,
+          "col": 6,
+          "isRed": false
+        }
+      ],
+      "solution": [
+        {
+          "vehicleId": "v1",
+          "delta": 1
+        },
+        {
+          "vehicleId": "v11",
+          "delta": -1
+        },
+        {
+          "vehicleId": "v3",
+          "delta": -1
+        },
+        {
+          "vehicleId": "v5",
+          "delta": -1
+        },
+        {
+          "vehicleId": "R",
+          "delta": 6
+        }
+      ],
+      "optimalMoveCount": 5
+    },
+    {
+      "id": "defi-08",
+      "name": "Grand huit",
+      "difficulty": "Expert",
+      "vehicles": [
+        {
+          "id": "R",
+          "kind": "car",
+          "orientation": "H",
+          "row": 3,
+          "col": 3,
+          "isRed": true
+        },
+        {
+          "id": "v1",
+          "kind": "car",
+          "orientation": "H",
+          "row": 5,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v2",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 1,
+          "col": 2,
+          "isRed": false
+        },
+        {
+          "id": "v3",
+          "kind": "car",
+          "orientation": "V",
+          "row": 5,
+          "col": 3,
+          "isRed": false
+        },
+        {
+          "id": "v4",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 1,
+          "col": 3,
+          "isRed": false
+        },
+        {
+          "id": "v5",
+          "kind": "car",
+          "orientation": "V",
+          "row": 3,
+          "col": 5,
+          "isRed": false
+        },
+        {
+          "id": "v8",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 2,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v10",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 2,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v22",
+          "kind": "car",
+          "orientation": "H",
+          "row": 4,
+          "col": 2,
+          "isRed": false
+        }
+      ],
+      "solution": [
+        {
+          "vehicleId": "v22",
+          "delta": 1
+        },
+        {
+          "vehicleId": "v2",
+          "delta": 2
+        },
+        {
+          "vehicleId": "v4",
+          "delta": -2
+        },
+        {
+          "vehicleId": "v10",
+          "delta": -2
+        },
+        {
+          "vehicleId": "v5",
+          "delta": -2
+        },
+        {
+          "vehicleId": "R",
+          "delta": 4
+        }
+      ],
+      "optimalMoveCount": 6
+    },
+    {
+      "id": "defi-09",
+      "name": "Le labyrinthe",
+      "difficulty": "Génie",
+      "vehicles": [
+        {
+          "id": "R",
+          "kind": "car",
+          "orientation": "H",
+          "row": 3,
+          "col": 1,
+          "isRed": true
+        },
+        {
+          "id": "v2",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 3,
+          "col": 3,
+          "isRed": false
+        },
+        {
+          "id": "v6",
+          "kind": "car",
+          "orientation": "H",
+          "row": 1,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v10",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 4,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v11",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 6,
+          "col": 2,
+          "isRed": false
+        },
+        {
+          "id": "v13",
+          "kind": "car",
+          "orientation": "H",
+          "row": 5,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v15",
+          "kind": "car",
+          "orientation": "H",
+          "row": 2,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v21",
+          "kind": "truck",
+          "orientation": "V",
+          "row": 3,
+          "col": 6,
+          "isRed": false
+        }
+      ],
+      "solution": [
+        {
+          "vehicleId": "v11",
+          "delta": 2
+        },
+        {
+          "vehicleId": "v2",
+          "delta": 1
+        },
+        {
+          "vehicleId": "R",
+          "delta": 3
+        },
+        {
+          "vehicleId": "v2",
+          "delta": -3
+        },
+        {
+          "vehicleId": "v11",
+          "delta": -2
+        },
+        {
+          "vehicleId": "v21",
+          "delta": 1
+        },
+        {
+          "vehicleId": "R",
+          "delta": 3
+        }
+      ],
+      "optimalMoveCount": 7
+    },
+    {
+      "id": "defi-10",
+      "name": "Sortie finale",
+      "difficulty": "Génie",
+      "vehicles": [
+        {
+          "id": "R",
+          "kind": "car",
+          "orientation": "H",
+          "row": 3,
+          "col": 1,
+          "isRed": true
+        },
+        {
+          "id": "v1",
+          "kind": "car",
+          "orientation": "V",
+          "row": 1,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v2",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 2,
+          "col": 2,
+          "isRed": false
+        },
+        {
+          "id": "v3",
+          "kind": "car",
+          "orientation": "V",
+          "row": 3,
+          "col": 5,
+          "isRed": false
+        },
+        {
+          "id": "v6",
+          "kind": "car",
+          "orientation": "H",
+          "row": 5,
+          "col": 5,
+          "isRed": false
+        },
+        {
+          "id": "v7",
+          "kind": "car",
+          "orientation": "H",
+          "row": 5,
+          "col": 1,
+          "isRed": false
+        },
+        {
+          "id": "v11",
+          "kind": "car",
+          "orientation": "V",
+          "row": 2,
+          "col": 6,
+          "isRed": false
+        },
+        {
+          "id": "v17",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 6,
+          "col": 2,
+          "isRed": false
+        },
+        {
+          "id": "v18",
+          "kind": "car",
+          "orientation": "V",
+          "row": 1,
+          "col": 5,
+          "isRed": false
+        },
+        {
+          "id": "v29",
+          "kind": "car",
+          "orientation": "V",
+          "row": 4,
+          "col": 4,
+          "isRed": false
+        },
+        {
+          "id": "v32",
+          "kind": "truck",
+          "orientation": "H",
+          "row": 1,
+          "col": 2,
+          "isRed": false
+        }
+      ],
+      "solution": [
+        {
+          "vehicleId": "R",
+          "delta": 1
+        },
+        {
+          "vehicleId": "v1",
+          "delta": 2
+        },
+        {
+          "vehicleId": "v2",
+          "delta": -1
+        },
+        {
+          "vehicleId": "v11",
+          "delta": -1
+        },
+        {
+          "vehicleId": "v32",
+          "delta": -1
+        },
+        {
+          "vehicleId": "v29",
+          "delta": -3
+        },
+        {
+          "vehicleId": "v6",
+          "delta": -2
+        },
+        {
+          "vehicleId": "v3",
+          "delta": 1
+        },
+        {
+          "vehicleId": "R",
+          "delta": 5
+        }
+      ],
+      "optimalMoveCount": 9
+    }
+  ]
+}
