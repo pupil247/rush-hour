@@ -26,10 +26,13 @@ accidentally change the rules, and makes an offline solver reuse the exact same 
 
 ### III. No Build Step (NON-NEGOTIABLE)
 The application MUST run directly from static files with no bundler, transpiler, or compile step.
-The browser MUST load native ES modules, and third-party dependencies (Three.js and its addons)
-MUST be resolved at runtime via an `<script type="importmap">` pinned to a CDN. There MUST be no
-`dist/`, no build artifact, and no tooling required to open and play the game. Any tooling used is
-permitted only for development and testing, never to produce the shipped runtime.
+The browser MUST load native ES modules, and third-party code dependencies (Three.js and its
+addons) MUST be resolved at runtime via an `<script type="importmap">` pinned to a CDN. There MUST
+be no `dist/`, no build artifact, and no tooling required to open and play the game. Any tooling
+used is permitted only for development and testing, never to produce the shipped runtime. Binary
+assets (including 3D model files) are permitted as static files and MUST be shipped in the exact
+form in which they are authored and served; no asset conversion, packing, or compile step is
+permitted in the runtime path.
 
 **Rationale**: "No build" is an explicit product constraint: it maximizes portability, keeps the
 deployed artifact identical to the source, and lowers the barrier to inspecting and hosting the game.
@@ -58,13 +61,17 @@ truthful and lets tests assert that every shipped puzzle is winnable and scored 
 ## Technology & Platform Constraints
 
 The runtime is a static, host-agnostic web app: plain `index.html`, ES modules, `challenges.json`,
-and `RULES.md`, servable by any static file server. Three.js and its addons are loaded as ESM from a
-CDN via an import map; there is no backend and no server-side code. The 3D layer renders a
-procedurally generated scene (Three.js primitives and materials), and v1 MUST NOT depend on binary
-3D assets. Game logic is a 2D grid; "3D" is presentation only. The user interface language is French
-for v1. Client-side persistence (best scores and progress) MUST use `localStorage`. Input MUST
-support pointer drag to slide a vehicle and click-to-select followed by arrow keys, and the
-interaction MUST remain usable on touch devices.
+`RULES.md`, and any bundled static assets, servable by any static file server. Three.js and its
+addons are loaded as ESM from a CDN via an import map; there is no backend and no server-side code.
+The 3D layer MAY render either a procedurally generated scene (Three.js primitives and materials) or
+pre-authored 3D model assets (for example `.glb`/`.gltf` files) that are bundled as static files
+with the application and loaded at runtime. Bundled model assets MUST be served in their authored
+form with no conversion, packing, or compile step, MUST be small enough to load without blocking
+first play, and MUST have a playable fallback representation when they cannot be loaded. Game logic
+is a 2D grid; "3D" is presentation only. The user interface language is French for v1. Client-side
+persistence (best scores and progress) MUST use `localStorage`. Input MUST support pointer drag to
+slide a vehicle and click-to-select followed by arrow keys, and the interaction MUST remain usable
+on touch devices.
 
 ## Development Workflow & Quality Gates
 
@@ -73,9 +80,9 @@ Development MUST run against a static server; no build command exists. The manda
 before a change is considered complete. Landing a change MUST NOT introduce a build step or a
 runtime dependency that violates Principle III. The challenge guard test and schema validation MUST
 run in the same suite as the game logic. Offline authoring tools (such as the solver script that
-bakes solutions into `challenges.json`) MAY exist under a clearly separated tooling path and MUST NOT
-be loaded by the shipped app. Where a plan or task conflicts with this constitution, the
-constitution prevails.
+bakes solutions into `challenges.json`, or tooling that generates model assets) MAY exist under a
+clearly separated tooling path and MUST NOT be loaded by the shipped app. Where a plan or task
+conflicts with this constitution, the constitution prevails.
 
 ## Governance
 
@@ -90,4 +97,4 @@ read-only except through the amendment process defined here. The Sync Impact Rep
 this file is temporary review material and MUST be removed before the amended constitution is
 committed.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-07 | **Last Amended**: 2026-10-07
+**Version**: 1.1.0 | **Ratified**: 2026-10-07 | **Last Amended**: 2026-10-07
