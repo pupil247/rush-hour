@@ -37,6 +37,14 @@ npm run test:e2e
 - **Raccourcis** : `Ctrl/Cmd+Z` annuler, `Ctrl/Cmd+Shift+Z` ou `Ctrl/Cmd+Y` rétablir, `R`
   recommencer, `H` voir la solution.
 
+## Véhicules 3D
+
+Les voitures (2 cases) et les camions (3 cases) utilisent des modèles 3D préfabriqués, fournis avec
+le jeu dans `assets/models/` et chargés à l'exécution (glTF binaire). Chaque véhicule reçoit une
+couleur de carrosserie distincte, la voiture rouge restant unique. Si un modèle est indisponible, le
+jeu bascule sur un simple bloc jouable (aucune perte de fonctionnalité). Sources et licences des
+modèles : [`assets/models/ATTRIBUTION.md`](./assets/models/ATTRIBUTION.md).
+
 ## Contenu des défis
 
 Les 10 défis (`challenges.json`) sont vérifiés par le solveur. Pour recalculer les solutions

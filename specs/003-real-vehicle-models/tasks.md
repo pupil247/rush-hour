@@ -32,9 +32,9 @@ independently.
 
 **Purpose**: Prepare the import map, the asset folder, and the hermetic test fixtures.
 
-- [ ] T001 Add the `three/addons/` entry to the import map in `index.html`, pinned to the same version as `three` (`"three/addons/": "https://unpkg.com/three@0.169.0/examples/jsm/"`).
-- [ ] T002 [P] Create `assets/models/` and write `assets/models/ATTRIBUTION.md` with the fields required by `contracts/model-asset.md` (source, author, license, retrieval date) left ready to fill when the files land.
-- [ ] T003 [P] Vendor pinned hermetic copies of `GLTFLoader.js` and `BufferGeometryUtils.js` into `tests/fixtures/` (downloaded from `three@0.169.0/examples/jsm/`).
+- [x] T001 Add the `three/addons/` entry to the import map in `index.html`, pinned to the same version as `three` (`"three/addons/": "https://unpkg.com/three@0.169.0/examples/jsm/"`).
+- [x] T002 [P] Create `assets/models/` and write `assets/models/ATTRIBUTION.md` with the fields required by `contracts/model-asset.md` (source, author, license, retrieval date) left ready to fill when the files land.
+- [x] T003 [P] Vendor pinned hermetic copies of `GLTFLoader.js` and `BufferGeometryUtils.js` into `tests/fixtures/` (downloaded from `three@0.169.0/examples/jsm/`).
 
 ---
 
@@ -44,8 +44,8 @@ independently.
 
 **⚠️ CRITICAL**: Complete this phase before any user story.
 
-- [ ] T004 Refactor `src/render/vehicles.js` to export the existing procedural builder and palette as `createFallbackVehicle(vehicle)` and `colorFor(vehicle)` with no behavior change, so the new model module can reuse them.
-- [ ] T005 Update `tests/e2e/three-fixture.js` to route the addon CDN URLs (`.../GLTFLoader.js` and `.../utils/BufferGeometryUtils.js`) to the vendored fixtures from T003, alongside the existing `three` route.
+- [x] T004 Refactor `src/render/vehicles.js` to export the existing procedural builder and palette as `createFallbackVehicle(vehicle)` and `colorFor(vehicle)` with no behavior change, so the new model module can reuse them.
+- [x] T005 Update `tests/e2e/three-fixture.js` to route the addon CDN URLs (`.../GLTFLoader.js` and `.../utils/BufferGeometryUtils.js`) to the vendored fixtures from T003, alongside the existing `three` route.
 
 **Checkpoint**: Import map, asset folder, shared vehicle helpers, and hermetic fixtures are ready.
 
@@ -61,19 +61,19 @@ procedural box) and that moves, counting, undo/redo, and win detection still beh
 
 ### Tests for User Story 1 (write first, must fail before T009–T014)
 
-- [ ] T006 [P] [US1] Unit test the pure `fitVehicleModel(size, kind, orientation)` in `tests/unit/models.test.js`: uniform scale makes the fitted length equal `lengthForKind(kind) * 0.88`, width ≤ 1 cell, `rotationY` aligns the axis, and the model is grounded (`offset.y`) — per `data-model.md` rules.
-- [ ] T007 [P] [US1] E2E test in `tests/e2e/models.spec.js` that opening `Premier virage` renders model vehicles (not the fallback) and raises no `pageerror`.
+- [x] T006 [P] [US1] Unit test the pure `fitVehicleModel(size, kind, orientation)` in `tests/unit/models.test.js`: uniform scale makes the fitted length equal `lengthForKind(kind) * 0.88`, width ≤ 1 cell, `rotationY` aligns the axis, and the model is grounded (`offset.y`) — per `data-model.md` rules.
+- [x] T007 [P] [US1] E2E test in `tests/e2e/models.spec.js` that opening `Premier virage` renders model vehicles (not the fallback) and raises no `pageerror`.
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] Add the two assets: commit `assets/models/car.glb` (2-cell car) and `assets/models/truck.glb` (3-cell truck) sourced per `contracts/model-asset.md` (CC0, uncompressed glTF, self-contained, ≤ ~250 KB each), and fill in `assets/models/ATTRIBUTION.md`.
-- [ ] T009 [US1] Implement the pure `fitVehicleModel(size, kind, orientation)` in `src/render/models.js` per research D5.
-- [ ] T010 [US1] Implement `loadVehicleTemplates(baseUrl)` in `src/render/models.js`: load both `.glb` files in parallel with `GLTFLoader`, compute each bounding-box size, cache, and resolve a slot to `null` on failure (never throw) per research D1/D2/D7.
-- [ ] T011 [US1] Implement `createVehicleObject(vehicle, catalog, { colorFor, createFallback })` in `src/render/models.js`: clone the template, apply the `FitTransform`, enable shadows, and tag `userData.vehicleId` / `userData.isRed`; return the fallback when the template is `null` — per `contracts/vehicle-rendering.md`.
-- [ ] T012 [US1] Update `src/render/vehicles.js`: `syncVehicles(group, vehicles, catalog)` builds every vehicle via `createVehicleObject`, and `applySelection` traverses the object to work with either a model group or a fallback mesh.
-- [ ] T013 [US1] Wire the catalog in `src/main.js`: call `loadVehicleTemplates()` in `initThree`, store it on `state`, and pass it to `syncVehicles` on every board sync.
-- [ ] T014 [US1] Update `src/input/pointer.js`: raycast recursively (`intersectObjects(group.children, true)`) and resolve the hit to the ancestor carrying `userData.vehicleId`, then drag/animate that vehicle root per research D8.
-- [ ] T015 [US1] Run quickstart V1–V2 in `specs/003-real-vehicle-models/quickstart.md` and fix any issues until models render correctly on the board.
+- [x] T008 [US1] Add the two assets: commit `assets/models/car.glb` (2-cell car) and `assets/models/truck.glb` (3-cell truck) sourced per `contracts/model-asset.md` (CC0, uncompressed glTF, self-contained, ≤ ~250 KB each), and fill in `assets/models/ATTRIBUTION.md`.
+- [x] T009 [US1] Implement the pure `fitVehicleModel(size, kind, orientation)` in `src/render/models.js` per research D5.
+- [x] T010 [US1] Implement `loadVehicleTemplates(baseUrl)` in `src/render/models.js`: load both `.glb` files in parallel with `GLTFLoader`, compute each bounding-box size, cache, and resolve a slot to `null` on failure (never throw) per research D1/D2/D7.
+- [x] T011 [US1] Implement `createVehicleObject(vehicle, catalog, { colorFor, createFallback })` in `src/render/models.js`: clone the template, apply the `FitTransform`, enable shadows, and tag `userData.vehicleId` / `userData.isRed`; return the fallback when the template is `null` — per `contracts/vehicle-rendering.md`.
+- [x] T012 [US1] Update `src/render/vehicles.js`: `syncVehicles(group, vehicles, catalog)` builds every vehicle via `createVehicleObject`, and `applySelection` traverses the object to work with either a model group or a fallback mesh.
+- [x] T013 [US1] Wire the catalog in `src/main.js`: call `loadVehicleTemplates()` in `initThree`, store it on `state`, and pass it to `syncVehicles` on every board sync.
+- [x] T014 [US1] Update `src/input/pointer.js`: raycast recursively (`intersectObjects(group.children, true)`) and resolve the hit to the ancestor carrying `userData.vehicleId`, then drag/animate that vehicle root per research D8.
+- [x] T015 [US1] Run quickstart V1–V2 in `specs/003-real-vehicle-models/quickstart.md` and fix any issues until models render correctly on the board.
 
 **Checkpoint**: Models render and the game plays exactly as before — this is the MVP.
 
@@ -88,13 +88,13 @@ orientation/footprint so the board stays easy to read.
 silhouette, each vehicle's color is distinct, exactly one vehicle is red, wheels/glass are not tinted,
 and highlights remain legible over the models.
 
-- [ ] T016 [P] [US2] E2E test in `tests/e2e/models.spec.js`: body colors are distinct across vehicles, exactly one vehicle is red, and non-body materials keep their original color.
-- [ ] T017 [P] [US2] Unit test the body-material selection/tinting helper in `tests/unit/models.test.js`: name match on `body|paint|car|truck` wins, otherwise the largest mesh by bounding-box volume is chosen.
-- [ ] T018 [US2] Implement per-instance material cloning and body tinting in `src/render/models.js`: clone materials, tint only the body material(s) to `colorFor(vehicle)`, preserve `glass`/`wheel`/`tire`/`chrome` per `contracts/model-asset.md` and research D4.
-- [ ] T019 [US2] Ensure the reserved red (`0xd21f2a`) plus red emissive is used for `isRed` vehicles and that exactly one red vehicle exists, reused from `colorFor` in `src/render/vehicles.js`.
-- [ ] T020 [US2] Verify and adjust fit so a car is visibly shorter than a truck (2 vs 3 cells) and `rotationY` matches the `H`/`V` axis, in `src/render/models.js`.
-- [ ] T021 [US2] Confirm `applySelection` emissive is applied to the tinted body material(s) (not a single `.material`) in `src/render/vehicles.js`, keeping the selected/browsing highlight legible.
-- [ ] T022 [US2] Run quickstart V2–V4 in `specs/003-real-vehicle-models/quickstart.md` and fix any issues.
+- [x] T016 [P] [US2] E2E test in `tests/e2e/models.spec.js`: body colors are distinct across vehicles, exactly one vehicle is red, and non-body materials keep their original color.
+- [x] T017 [P] [US2] Unit test the body-material selection/tinting helper in `tests/unit/models.test.js`: name match on `body|paint|car|truck` wins, otherwise the largest mesh by bounding-box volume is chosen.
+- [x] T018 [US2] Implement per-instance material cloning and body tinting in `src/render/models.js`: clone materials, tint only the body material(s) to `colorFor(vehicle)`, preserve `glass`/`wheel`/`tire`/`chrome` per `contracts/model-asset.md` and research D4.
+- [x] T019 [US2] Ensure the reserved red (`0xd21f2a`) plus red emissive is used for `isRed` vehicles and that exactly one red vehicle exists, reused from `colorFor` in `src/render/vehicles.js`.
+- [x] T020 [US2] Verify and adjust fit so a car is visibly shorter than a truck (2 vs 3 cells) and `rotationY` matches the `H`/`V` axis, in `src/render/models.js`.
+- [x] T021 [US2] Confirm `applySelection` emissive is applied to the tinted body material(s) (not a single `.material`) in `src/render/vehicles.js`, keeping the selected/browsing highlight legible.
+- [x] T022 [US2] Run quickstart V2–V4 in `specs/003-real-vehicle-models/quickstart.md` and fix any issues.
 
 **Checkpoint**: The board is readable at a glance; US1 and US2 both work.
 
@@ -108,12 +108,12 @@ smooth play.
 **Independent Test**: Serve the game statically (including a subpath base), confirm models load; then
 fail a model request and confirm the game stays fully playable via the fallback with no error.
 
-- [ ] T023 [P] [US3] E2E fallback test in `tests/e2e/models.spec.js`: abort the `car.glb` request, assert a fallback vehicle renders and the player can still select, drag, and move (win path intact), with no unhandled error.
-- [ ] T024 [P] [US3] E2E asset-URL test in `tests/e2e/models.spec.js`: assert the model requests are module-relative (no leading slash) and succeed, proving subpath portability.
-- [ ] T025 [US3] Guarantee failure isolation in `src/render/models.js`: a load/parse failure or empty model yields the fallback and logs at most a console warning, never an unhandled rejection.
-- [ ] T026 [US3] Ensure all model URLs are resolved via `import.meta.url` (research D9) in `src/render/models.js`.
-- [ ] T027 [US3] Tune performance: keep each `.glb` ≤ ~250 KB and low-poly, and ensure per-vehicle cloning shares geometry where possible; verify no perceptible stutter in `src/render/models.js`.
-- [ ] T028 [US3] Run quickstart V6–V8 in `specs/003-real-vehicle-models/quickstart.md` and fix any issues.
+- [x] T023 [P] [US3] E2E fallback test in `tests/e2e/models.spec.js`: abort the `car.glb` request, assert a fallback vehicle renders and the player can still select, drag, and move (win path intact), with no unhandled error.
+- [x] T024 [P] [US3] E2E asset-URL test in `tests/e2e/models.spec.js`: assert the model requests are module-relative (no leading slash) and succeed, proving subpath portability.
+- [x] T025 [US3] Guarantee failure isolation in `src/render/models.js`: a load/parse failure or empty model yields the fallback and logs at most a console warning, never an unhandled rejection.
+- [x] T026 [US3] Ensure all model URLs are resolved via `import.meta.url` (research D9) in `src/render/models.js`.
+- [x] T027 [US3] Tune performance: keep each `.glb` ≤ ~250 KB and low-poly, and ensure per-vehicle cloning shares geometry where possible; verify no perceptible stutter in `src/render/models.js`.
+- [x] T028 [US3] Run quickstart V6–V8 in `specs/003-real-vehicle-models/quickstart.md` and fix any issues.
 
 **Checkpoint**: All three stories are independently functional.
 
@@ -123,10 +123,10 @@ fail a model request and confirm the game stays fully playable via the fallback 
 
 **Purpose**: Documentation and final verification across all stories.
 
-- [ ] T029 [P] Update `README.md` with a short "Véhicules 3D" note and the model attribution pointer to `assets/models/ATTRIBUTION.md`.
-- [ ] T030 Run the full gate: `node --test` and `npx playwright test`; both MUST pass with no regressions in rules, moves, scoring, or challenge tests; record results in `specs/003-real-vehicle-models/quickstart.md`.
-- [ ] T031 Verify the no-build, source-identical deployment: serve `index.html` with `python3 -m http.server 8080`, confirm play, and confirm no `dist/` or build artifact exists.
-- [ ] T032 [P] Re-check constitution compliance in `.specify/memory/constitution.md` (Principle III: assets shipped as authored; Principle II: `src/core/` untouched) and adjust documentation if anything drifted.
+- [x] T029 [P] Update `README.md` with a short "Véhicules 3D" note and the model attribution pointer to `assets/models/ATTRIBUTION.md`.
+- [x] T030 Run the full gate: `node --test` and `npx playwright test`; both MUST pass with no regressions in rules, moves, scoring, or challenge tests; record results in `specs/003-real-vehicle-models/quickstart.md`.
+- [x] T031 Verify the no-build, source-identical deployment: serve `index.html` with `python3 -m http.server 8080`, confirm play, and confirm no `dist/` or build artifact exists.
+- [x] T032 [P] Re-check constitution compliance in `.specify/memory/constitution.md` (Principle III: assets shipped as authored; Principle II: `src/core/` untouched) and adjust documentation if anything drifted.
 
 ---
 

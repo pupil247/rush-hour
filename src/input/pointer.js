@@ -20,8 +20,12 @@ export function createPointerInput({ canvas, camera, getState, onSelect, onMove,
     raycaster.setFromCamera(pointer, camera);
     const group = getState().three.vehicleGroup;
     if (!group) return null;
-    const hits = raycaster.intersectObjects(group.children, false);
-    return hits[0]?.object ?? null;
+    // Vehicles are groups (model clones) or meshes (fallback), so raycast recursively and walk up
+    // to the object that carries the vehicle id.
+    const hits = raycaster.intersectObjects(group.children, true);
+    let object = hits[0]?.object ?? null;
+    while (object && object.userData?.vehicleId == null) object = object.parent;
+    return object ?? null;
   }
 
   function planePoint() {

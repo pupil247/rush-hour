@@ -25,6 +25,7 @@ const state = {
   challenge: null,
   attempt: null,
   selection: { highlightedId: null, selectedId: null },
+  templates: { car: null, truck: null },
   three: null,
   meshes: null,
   hud: null,
@@ -72,7 +73,7 @@ document.addEventListener('visibilitychange', () => {
 
 async function initThree() {
   if (state.three) return state.three;
-  const [sceneMod, cameraMod, boardMod, vehiclesMod, animMod, pointerMod, keyboardMod] = await Promise.all([
+  const [sceneMod, cameraMod, boardMod, vehiclesMod, animMod, pointerMod, keyboardMod, modelsMod] = await Promise.all([
     import('./render/scene.js'),
     import('./render/camera.js'),
     import('./render/board3d.js'),
@@ -80,6 +81,7 @@ async function initThree() {
     import('./render/animation.js'),
     import('./input/pointer.js'),
     import('./input/keyboard.js'),
+    import('./render/models.js'),
   ]);
 
   const canvas = el('scene');
@@ -88,6 +90,9 @@ async function initThree() {
   boardMod.createBoard(scene);
   const vehicleGroup = vehiclesMod.createVehicles(scene);
   sceneMod.createRenderLoop(renderer, scene, camera);
+
+  // Load the vehicle models once. Failures resolve to null and select the procedural fallback.
+  state.templates = await modelsMod.loadVehicleTemplates();
 
   state.three = {
     renderer,
@@ -141,10 +146,22 @@ function exposeTestHandle() {
   globalThis.__rushHour = {
     selection: () => ({ ...state.selection }),
     vehicleIds: () => state.attempt?.vehicles.map((v) => v.id) ?? [],
+    vehicleKind: (id) => state.attempt?.vehicles.find((v) => v.id === id)?.kind ?? null,
+    isModel: (id) => Boolean(state.meshes?.get(id)?.userData?.isModel),
+    bodyColors() {
+      const out = {};
+      for (const [id, mesh] of state.meshes ?? []) {
+        const material = mesh.userData?.tintMaterials?.[0];
+        if (material?.color) out[id] = material.color.getHex();
+      }
+      return out;
+    },
     vehicleScreenPoint(id) {
       const mesh = state.meshes?.get(id);
       if (!mesh) return null;
-      const projected = mesh.position.clone().project(state.three.camera);
+      const point = mesh.position.clone();
+      point.y = mesh.userData?.centerY ?? point.y; // aim at the model's visual centre, not its base
+      const projected = point.project(state.three.camera);
       const rect = state.three.canvas.getBoundingClientRect();
       return {
         x: rect.left + (projected.x * 0.5 + 0.5) * rect.width,
@@ -170,7 +187,7 @@ function applySelectionToScene() {
 
 function resyncMeshes() {
   if (!state.three) return;
-  state.meshes = state.three.syncVehicles(state.three.vehicleGroup, state.attempt.vehicles);
+  state.meshes = state.three.syncVehicles(state.three.vehicleGroup, state.attempt.vehicles, state.templates);
   applySelectionToScene();
 }
 
@@ -250,6 +267,7 @@ async function reveal() {
   state.meshes = state.three.syncVehicles(
     state.three.vehicleGroup,
     state.challenge.vehicles.map((v) => ({ ...v })),
+    state.templates,
   );
   await state.three.playSolution(state.meshes, state.challenge.vehicles, solution, applyMove, 420);
   playback.close();
