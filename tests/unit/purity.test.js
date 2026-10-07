@@ -17,3 +17,13 @@ test('core modules import neither the DOM nor Three.js', () => {
     );
   }
 });
+
+test('the selection reducer is pure (no DOM, no Three.js)', () => {
+  const raw = readFileSync(new URL('../../src/input/selection.js', import.meta.url), 'utf8');
+  const code = raw.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
+  assert.ok(!/from\s+['"]three['"]/.test(code), 'selection.js must not import three');
+  assert.ok(
+    !/\bdocument\.|\bwindow\.|\bglobalThis\.(document|window)/.test(code),
+    'selection.js must not touch the DOM',
+  );
+});

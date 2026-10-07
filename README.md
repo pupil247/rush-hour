@@ -27,6 +27,16 @@ node --test
 npm run test:e2e
 ```
 
+## Contrôles
+
+- **Souris / tactile** : cliquez une voiture pour la sélectionner, faites-la glisser le long de sa
+  file pour la déplacer ; cliquez une case vide pour désélectionner.
+- **Clavier** : en mode navigation (rien de sélectionné), les flèches changent la voiture mise en
+  surbrillance ; `Espace` la sélectionne. Une fois sélectionnée, les flèches la déplacent d'une case
+  le long de son axe, et `Espace` la désélectionne.
+- **Raccourcis** : `Ctrl/Cmd+Z` annuler, `Ctrl/Cmd+Shift+Z` ou `Ctrl/Cmd+Y` rétablir, `R`
+  recommencer, `H` voir la solution.
+
 ## Contenu des défis
 
 Les 10 défis (`challenges.json`) sont vérifiés par le solveur. Pour recalculer les solutions

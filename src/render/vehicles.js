@@ -1,7 +1,11 @@
 import * as THREE from 'three';
 import { lengthForKind } from '../core/rules.js';
+import { levelFor } from '../input/selection.js';
 
 const PALETTE = [0x3aa0ff, 0xffc233, 0x42d392, 0xb069ff, 0xff8b3d, 0x36c5d6, 0x8bc34a];
+
+const SELECTED_SCALE = 1.14;
+const HIGHLIGHTED_SCALE = 1.06;
 
 function colorFor(id, isRed) {
   if (isRed) return 0xd21f2a;
@@ -58,4 +62,25 @@ export function syncVehicles(group, vehicles) {
     meshes.set(vehicle.id, mesh);
   }
   return meshes;
+}
+
+/**
+ * Apply the two-level highlight: a strong emphasis for the selected car and a lighter one for the
+ * browsing highlight; all other cars return to their default look.
+ */
+export function applySelection(meshes, selection) {
+  if (!meshes) return;
+  for (const [id, mesh] of meshes) {
+    const level = levelFor(selection, id);
+    if (level === 'selected') {
+      mesh.scale.setScalar(SELECTED_SCALE);
+      mesh.material?.emissive?.setHex(0x2a6db5);
+    } else if (level === 'highlighted') {
+      mesh.scale.setScalar(HIGHLIGHTED_SCALE);
+      mesh.material?.emissive?.setHex(0x14314f);
+    } else {
+      mesh.scale.setScalar(1);
+      mesh.material?.emissive?.setHex(mesh.userData.isRed ? 0x4a0004 : 0x000000);
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './three-fixture.js';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -6,24 +6,29 @@ const catalog = JSON.parse(
   readFileSync(fileURLToPath(new URL('../../challenges.json', import.meta.url)), 'utf8'),
 );
 
-// Drive the UI with the baked optimal solution, one cell per key press (each press is a move).
+// Browse to a car with the arrows and select it with Space (the two-mode keyboard model).
+async function selectVehicle(page, order, target) {
+  const selected = await page.evaluate(() => window.__rushHour.selection());
+  if (selected.selectedId) await page.keyboard.press(' '); // deselect before browsing
+  for (let i = 0; i <= order.length; i += 1) {
+    const current = await page.evaluate(() => window.__rushHour.selection());
+    if (current.highlightedId === target) break;
+    await page.keyboard.press('ArrowRight');
+  }
+  await page.keyboard.press(' ');
+}
+
 test('solving the first challenge wins and records progress', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/?test=1');
   await page.getByText('Premier virage').click();
   await expect(page.getByText('Déplacements : 0')).toBeVisible();
+  await page.waitForFunction(() => typeof window.__rushHour !== 'undefined');
 
   const challenge = catalog.challenges[0];
   const order = challenge.vehicles.map((v) => v.id);
-  let selected = null;
 
   for (const mv of challenge.solution) {
-    const target = order.indexOf(mv.vehicleId);
-    const current = selected == null ? -1 : order.indexOf(selected);
-    let presses = (target - current + order.length) % order.length;
-    if (presses === 0) presses = order.length;
-    for (let i = 0; i < presses; i += 1) await page.keyboard.press('Tab');
-    selected = mv.vehicleId;
-
+    await selectVehicle(page, order, mv.vehicleId);
     const vehicle = challenge.vehicles.find((v) => v.id === mv.vehicleId);
     const key =
       vehicle.orientation === 'H'

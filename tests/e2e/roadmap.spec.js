@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './three-fixture.js';
 
 test('the roadmap loads and the first challenge opens in 3D', async ({ page }) => {
   await page.goto('/');

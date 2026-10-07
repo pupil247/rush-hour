@@ -4,6 +4,15 @@ import { buildRoadmap, loadCatalog } from './data/challenges.js';
 import { loadProgress, recordCompletion, saveProgress } from './progress.js';
 import * as game from './core/game.js';
 import { applyMove } from './core/moves.js';
+import {
+  clear as clearSelection,
+  cycle as cycleSelectionState,
+  initial as initialSelection,
+  keep as keepSelection,
+  reconcile as reconcileSelection,
+  select as selectState,
+  toggle as toggleSelectionState,
+} from './input/selection.js';
 import { renderRoadmap } from './ui/roadmap.js';
 import { createHud } from './ui/hud.js';
 import { createDialogs } from './ui/dialogs.js';
@@ -15,7 +24,7 @@ const state = {
   roadmap: null,
   challenge: null,
   attempt: null,
-  selected: null,
+  selection: { highlightedId: null, selectedId: null },
   three: null,
   meshes: null,
   hud: null,
@@ -87,6 +96,7 @@ async function initThree() {
     vehicleGroup,
     canvas,
     syncVehicles: vehiclesMod.syncVehicles,
+    applySelection: vehiclesMod.applySelection,
     animateMove: animMod.animateMove,
     playSolution: animMod.playSolution,
     resize: cameraMod.resize,
@@ -102,11 +112,12 @@ async function initThree() {
   });
 
   keyboardMod.createKeyboardInput({
-    getSelected: () => state.selected,
+    getSelection: () => state.selection,
     getVehicles: () => state.attempt?.vehicles ?? [],
+    onCycle: cycleSelection,
+    onToggle: toggleSelection,
     onMove: doMove,
     onBlocked: () => audio.playBlocked(),
-    onCycle: cycleSelection,
     onUndo: undo,
     onRedo: redo,
     onReset: reset,
@@ -114,6 +125,7 @@ async function initThree() {
   });
 
   window.addEventListener('resize', resizeThree);
+  exposeTestHandle();
   return state.three;
 }
 
@@ -123,38 +135,60 @@ function resizeThree() {
   state.three.resize(state.three.renderer, state.three.camera, canvas.clientWidth || 800, canvas.clientHeight || 600);
 }
 
+// Test-only handle, exposed only when the URL carries ?test (used by the Playwright specs).
+function exposeTestHandle() {
+  if (!new URLSearchParams(location.search).has('test')) return;
+  globalThis.__rushHour = {
+    selection: () => ({ ...state.selection }),
+    vehicleIds: () => state.attempt?.vehicles.map((v) => v.id) ?? [],
+    vehicleScreenPoint(id) {
+      const mesh = state.meshes?.get(id);
+      if (!mesh) return null;
+      const projected = mesh.position.clone().project(state.three.camera);
+      const rect = state.three.canvas.getBoundingClientRect();
+      return {
+        x: rect.left + (projected.x * 0.5 + 0.5) * rect.width,
+        y: rect.top + (-projected.y * 0.5 + 0.5) * rect.height,
+      };
+    },
+    emphasized() {
+      const out = { selected: [], highlighted: [] };
+      for (const [id, mesh] of state.meshes ?? []) {
+        if (Math.abs(mesh.scale.x - 1.14) < 0.001) out.selected.push(id);
+        else if (Math.abs(mesh.scale.x - 1.06) < 0.001) out.highlighted.push(id);
+      }
+      return out;
+    },
+  };
+}
+
 /* ------------------------------------------------------------- rendering */
 
-function applyHighlight() {
-  if (!state.meshes) return;
-  for (const [id, mesh] of state.meshes) {
-    const selected = id === state.selected;
-    mesh.scale.setScalar(selected ? 1.08 : 1);
-    if (mesh.material?.emissive) {
-      const base = mesh.userData.isRed ? 0x4a0004 : 0x000000;
-      mesh.material.emissive.setHex(selected ? 0x1d4a7a : base);
-    }
-  }
+function applySelectionToScene() {
+  if (state.three) state.three.applySelection(state.meshes, state.selection);
 }
 
 function resyncMeshes() {
   if (!state.three) return;
   state.meshes = state.three.syncVehicles(state.three.vehicleGroup, state.attempt.vehicles);
-  applyHighlight();
+  applySelectionToScene();
 }
 
 /* ---------------------------------------------------------------- actions */
 
 function selectVehicle(id) {
-  state.selected = id;
-  applyHighlight();
+  state.selection = id == null ? clearSelection() : selectState(state.selection, id);
+  applySelectionToScene();
 }
 
 function cycleSelection(direction) {
-  const ids = state.attempt.vehicles.map((v) => v.id);
-  if (!ids.length) return;
-  const current = ids.indexOf(state.selected);
-  selectVehicle(ids[(current + direction + ids.length) % ids.length]);
+  state.selection = cycleSelectionState(state.selection, state.attempt.vehicles, direction);
+  applySelectionToScene();
+}
+
+function toggleSelection() {
+  state.selection = toggleSelectionState(state.selection);
+  applySelectionToScene();
 }
 
 async function doMove(id, delta) {
@@ -165,12 +199,12 @@ async function doMove(id, delta) {
     return;
   }
   state.attempt = next;
-  state.selected = id;
+  state.selection = keepSelection(state.selection, next.vehicles, id);
   audio.playMove();
   const mesh = state.meshes?.get(id);
   const vehicle = next.vehicles.find((v) => v.id === id);
   if (mesh && vehicle) await state.three.animateMove(mesh, vehicle);
-  applyHighlight();
+  applySelectionToScene();
   updateHud();
   if (state.attempt.status === 'won') handleWin();
 }
@@ -180,6 +214,7 @@ function undo() {
   const next = game.undo(state.attempt);
   if (next === state.attempt) return;
   state.attempt = next;
+  state.selection = reconcileSelection(state.selection, next.vehicles);
   resyncMeshes();
   updateHud();
 }
@@ -189,6 +224,7 @@ function redo() {
   const next = game.redo(state.attempt);
   if (next === state.attempt) return;
   state.attempt = next;
+  state.selection = reconcileSelection(state.selection, next.vehicles);
   resyncMeshes();
   updateHud();
 }
@@ -196,6 +232,7 @@ function redo() {
 function reset() {
   if (state.busy || !state.attempt) return;
   state.attempt = game.reset(state.attempt);
+  state.selection = initialSelection(state.attempt.vehicles);
   state.elapsed = 0;
   state.lastTick = performance.now();
   resyncMeshes();
@@ -266,8 +303,6 @@ function updateHud() {
 function showRoadmap() {
   stopTimer();
   dialogs.close();
-  state.selected = null;
-  state.challenge = null;
   el('game').hidden = true;
   el('screen').hidden = false;
   renderRoadmap(el('screen'), state.roadmap, state.catalog.challenges, startGame);
@@ -277,7 +312,7 @@ async function startGame(id) {
   dialogs.close();
   state.challenge = state.catalog.challenges.find((c) => c.id === id);
   state.attempt = game.createAttempt(state.challenge);
-  state.selected = null;
+  state.selection = initialSelection(state.attempt.vehicles);
   state.elapsed = 0;
   state.busy = false;
   el('screen').hidden = true;
@@ -292,6 +327,8 @@ async function startGame(id) {
     isMuted: audio.isMuted,
     toggleSound: () => audio.toggleMuted(),
   });
+  updateHud(); // show the counters immediately, before the 3D layer loads
+  state.hud.setLocked(true); // controls stay disabled until the level is ready
 
   try {
     await initThree();
@@ -301,6 +338,7 @@ async function startGame(id) {
   }
 
   resyncMeshes();
+  state.hud.setLocked(false);
   resizeThree();
   requestAnimationFrame(resizeThree);
   startTimer();

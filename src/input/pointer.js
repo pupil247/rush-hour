@@ -18,7 +18,9 @@ export function createPointerInput({ canvas, camera, getState, onSelect, onMove,
 
   function pickVehicle() {
     raycaster.setFromCamera(pointer, camera);
-    const hits = raycaster.intersectObjects(getState().vehicleGroup.children, false);
+    const group = getState().three.vehicleGroup;
+    if (!group) return null;
+    const hits = raycaster.intersectObjects(group.children, false);
     return hits[0]?.object ?? null;
   }
 
@@ -48,7 +50,11 @@ export function createPointerInput({ canvas, camera, getState, onSelect, onMove,
     const vehicle = vehicles.find((v) => v.id === id);
     const point = planePoint();
     if (!vehicle || !point) return;
-    canvas.setPointerCapture?.(event.pointerId);
+    try {
+      canvas.setPointerCapture?.(event.pointerId);
+    } catch {
+      // Pointer capture is best-effort; dragging still works without it.
+    }
     drag = { id, vehicle, startX: point.x, startZ: point.z, chosen: 0, mesh: hit };
   }
 

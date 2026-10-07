@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './three-fixture.js';
 
 test('sound can be muted and unmuted', async ({ page }) => {
   await page.goto('/');
