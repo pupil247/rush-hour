@@ -26,7 +26,7 @@ jobs:
       - name: Stage static site
         run: |
           mkdir -p _site
-          cp -r index.html challenges.json src assets/models _site/
+          cp -r index.html challenges.json src assets _site/
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
