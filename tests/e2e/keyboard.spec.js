@@ -1,4 +1,5 @@
 import { test, expect } from './three-fixture.js';
+import { openFirstLevel } from './helpers.js';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -7,8 +8,7 @@ const catalog = JSON.parse(
 );
 
 test('keyboard browses, selects, and deselects; arrows do not scroll the page', async ({ page }) => {
-  await page.goto('/?test=1');
-  await page.getByText('Premier virage').click();
+  await openFirstLevel(page);
   await expect(page.getByText('Déplacements : 0')).toBeVisible();
   await page.waitForFunction(() => typeof window.__rushHour !== 'undefined');
 
@@ -35,8 +35,7 @@ test('keyboard browses, selects, and deselects; arrows do not scroll the page', 
 });
 
 test('a selected car moves one cell per axis arrow; perpendicular arrow is ignored', async ({ page }) => {
-  await page.goto('/?test=1');
-  await page.getByText('Premier virage').click();
+  await openFirstLevel(page);
   await expect(page.getByText('Déplacements : 0')).toBeVisible();
   await page.waitForFunction(() => typeof window.__rushHour !== 'undefined');
 

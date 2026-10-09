@@ -1,8 +1,8 @@
 import { test, expect } from './three-fixture.js';
+import { openFirstLevel } from './helpers.js';
 
 test('revealing the solution plays an animation and restores the board', async ({ page }) => {
-  await page.goto('/');
-  await page.getByText('Premier virage').click();
+  await openFirstLevel(page);
   await expect(page.getByText('Déplacements : 0')).toBeVisible();
 
   const reveal = page.getByRole('button', { name: 'Voir la solution' });

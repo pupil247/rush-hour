@@ -1,12 +1,10 @@
 import { test, expect } from './three-fixture.js';
+import { openFirstLevel } from './helpers.js';
 
 const RED = 0xd21f2a;
 
 async function openFirstChallenge(page) {
-  await page.goto('/?test=1');
-  await page.getByText('Premier virage').click();
-  await expect(page.getByText('Déplacements : 0')).toBeVisible();
-  await page.waitForFunction(() => typeof window.__rushHour !== 'undefined', null, { timeout: 30_000 });
+  await openFirstLevel(page);
 }
 
 test('vehicles render as 3D models, not the procedural fallback', async ({ page }) => {

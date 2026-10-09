@@ -13,7 +13,7 @@ import {
   select as selectState,
   toggle as toggleSelectionState,
 } from './input/selection.js';
-import { renderRoadmap } from './ui/roadmap.js';
+import { showRoadmap as showRoadmapScreen } from './ui/roadmap.js';
 import { createHud } from './ui/hud.js';
 import { createDialogs } from './ui/dialogs.js';
 import * as audio from './audio.js';
@@ -26,6 +26,7 @@ const state = {
   attempt: null,
   selection: { highlightedId: null, selectedId: null },
   templates: { car: null, truck: null },
+  roadmapHandle: null,
   three: null,
   meshes: null,
   hud: null,
@@ -156,6 +157,8 @@ function exposeTestHandle() {
       }
       return out;
     },
+    vehicleYaw: (id) => state.meshes?.get(id)?.rotation?.y ?? null,
+    busy: () => state.busy,
     vehicleScreenPoint(id) {
       const mesh = state.meshes?.get(id);
       if (!mesh) return null;
@@ -318,16 +321,29 @@ function updateHud() {
 
 /* --------------------------------------------------------------- screens */
 
-function showRoadmap() {
+async function showRoadmap() {
   stopTimer();
   dialogs.close();
   el('game').hidden = true;
   el('screen').hidden = false;
-  renderRoadmap(el('screen'), state.roadmap, state.catalog.challenges, startGame);
+  if (state.roadmapHandle) {
+    state.roadmapHandle.dispose();
+    state.roadmapHandle = null;
+  }
+  state.roadmapHandle = await showRoadmapScreen({
+    order: state.roadmap.order,
+    challenges: state.catalog.challenges,
+    roadmap: state.roadmap,
+    onStartLevel: startGame,
+  });
 }
 
 async function startGame(id) {
   dialogs.close();
+  if (state.roadmapHandle) {
+    state.roadmapHandle.dispose();
+    state.roadmapHandle = null;
+  }
   state.challenge = state.catalog.challenges.find((c) => c.id === id);
   state.attempt = game.createAttempt(state.challenge);
   state.selection = initialSelection(state.attempt.vehicles);
@@ -377,7 +393,7 @@ async function boot() {
   }
   state.progress = loadProgress();
   state.roadmap = buildRoadmap(state.catalog, state.progress);
-  showRoadmap();
+  await showRoadmap();
 }
 
 boot();

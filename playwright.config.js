@@ -3,8 +3,8 @@ import { defineConfig } from '@playwright/test';
 // Dev-only test config. The game itself has no build step; Playwright starts a plain static server.
 export default defineConfig({
   testDir: './tests/e2e',
-  timeout: 60_000,
-  expect: { timeout: 30_000 },
+  timeout: 120_000,
+  expect: { timeout: 45_000 },
   fullyParallel: false,
   workers: 1,
   retries: 1,

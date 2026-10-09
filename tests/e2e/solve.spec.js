@@ -1,4 +1,5 @@
 import { test, expect } from './three-fixture.js';
+import { openFirstLevel } from './helpers.js';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -19,10 +20,7 @@ async function selectVehicle(page, order, target) {
 }
 
 test('solving the first challenge wins and records progress', async ({ page }) => {
-  await page.goto('/?test=1');
-  await page.getByText('Premier virage').click();
-  await expect(page.getByText('Déplacements : 0')).toBeVisible();
-  await page.waitForFunction(() => typeof window.__rushHour !== 'undefined');
+  await openFirstLevel(page);
 
   const challenge = catalog.challenges[0];
   const order = challenge.vehicles.map((v) => v.id);
@@ -38,10 +36,15 @@ test('solving the first challenge wins and records progress', async ({ page }) =
         : mv.delta > 0
           ? 'ArrowDown'
           : 'ArrowUp';
-    for (let i = 0; i < Math.abs(mv.delta); i += 1) await page.keyboard.press(key);
+    for (let i = 0; i < Math.abs(mv.delta); i += 1) {
+      await page.keyboard.press(key);
+      await page.waitForFunction(() => window.__rushHour && !window.__rushHour.busy());
+    }
   }
 
   await expect(page.getByText('Bravo !')).toBeVisible();
   await page.locator('#dialogs').getByRole('button', { name: 'Retour à la route' }).click();
-  await expect(page.locator('.stop.solved')).toHaveCount(1);
+  await page.waitForFunction(() => typeof window.__rushHourRoadmap !== 'undefined');
+  const solved = await page.evaluate(() => window.__rushHourRoadmap.nodeStates()[0].solved);
+  expect(solved).toBe(true);
 });

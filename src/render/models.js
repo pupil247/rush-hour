@@ -107,7 +107,7 @@ function fromTemplate(template, vehicle, { colorFor, centerFor }) {
 
   const wrapper = new THREE.Group();
   wrapper.add(model);
-  wrapper.rotation.y = fit.rotationY;
+  wrapper.rotation.y = fit.rotationY + (vehicle.isRed ? Math.PI : 0);
   wrapper.userData.centerY = (template.box.size.y * fit.scale.y) / 2;
 
   const materials = tintableMaterials(model);
@@ -118,6 +118,20 @@ function fromTemplate(template, vehicle, { colorFor, centerFor }) {
   const center = centerFor(vehicle);
   wrapper.position.set(center.x, 0, center.z);
   return wrapper;
+}
+
+/**
+ * Clone a template for use outside a board (e.g. the roadmap car): materials cloned, shadows on.
+ */
+export function cloneVehicleModel(template) {
+  return cloneModel(template);
+}
+
+/** Tint the body material(s) of a (freshly cloned) vehicle object; returns the tinted materials. */
+export function tintBody(object, hex) {
+  const materials = tintableMaterials(object);
+  for (const material of materials) material.color.setHex(hex);
+  return materials;
 }
 
 /**

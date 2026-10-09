@@ -1,8 +1,8 @@
 import { test, expect } from './three-fixture.js';
+import { openFirstLevel } from './helpers.js';
 
 test('the browsing highlight and the selected highlight are distinct and unique', async ({ page }) => {
-  await page.goto('/?test=1');
-  await page.getByText('Premier virage').click();
+  await openFirstLevel(page);
   await expect(page.getByText('Déplacements : 0')).toBeVisible();
   await page.waitForFunction(() => typeof window.__rushHour !== 'undefined');
 

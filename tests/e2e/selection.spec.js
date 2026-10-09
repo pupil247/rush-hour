@@ -1,4 +1,5 @@
 import { test, expect } from './three-fixture.js';
+import { openFirstLevel } from './helpers.js';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -10,10 +11,7 @@ test('clicking a car selects it without error; empty click clears', async ({ pag
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
 
-  await page.goto('/?test=1');
-  await page.getByText('Premier virage').click();
-  await expect(page.getByText('Déplacements : 0')).toBeVisible();
-  await page.waitForFunction(() => typeof window.__rushHour !== 'undefined');
+  await openFirstLevel(page);
 
   const ids = await page.evaluate(() => window.__rushHour.vehicleIds());
   const target = ids[0];
@@ -31,10 +29,7 @@ test('clicking a car selects it without error; empty click clears', async ({ pag
 });
 
 test('dragging a car moves it and increments the counter', async ({ page }) => {
-  await page.goto('/?test=1');
-  await page.getByText('Premier virage').click();
-  await expect(page.getByText('Déplacements : 0')).toBeVisible();
-  await page.waitForFunction(() => typeof window.__rushHour !== 'undefined');
+  await openFirstLevel(page);
 
   const firstMove = catalog.challenges[0].solution[0];
   const vehicle = catalog.challenges[0].vehicles.find((v) => v.id === firstMove.vehicleId);

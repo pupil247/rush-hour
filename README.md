@@ -37,6 +37,15 @@ npm run test:e2e
 - **Raccourcis** : `Ctrl/Cmd+Z` annuler, `Ctrl/Cmd+Shift+Z` ou `Ctrl/Cmd+Y` rétablir, `R`
   recommencer, `H` voir la solution.
 
+## Carte des niveaux (3D)
+
+La route des niveaux est un **serpentin 3D** : un nœud par défi, régions de difficulté colorées,
+et une petite **voiture rouge** (celle du joueur) qui roule de nœud en nœud — elle fait demi-tour
+quand on recule et s'arrête toujours sur un nœud. Survol : `▲` niveau suivant, `▼` niveau précédent
+(touches, ou boutons à l'écran sur mobile) ; `Entrée`/`Espace` (ou bouton « Jouer », ou clic sur le
+nœud où la voiture est garée) lance le niveau. La voiture rouge du jeu elle-même est toujours
+orientée vers la sortie.
+
 ## Véhicules 3D
 
 Les voitures (2 cases) et les camions (3 cases) utilisent des modèles 3D préfabriqués, fournis avec

@@ -32,4 +32,9 @@ export const STRINGS = {
   retry: 'Réessayer',
   level: 'Niveau',
   movesLabel: (n) => `${n} ${n === 1 ? 'déplacement' : 'déplacements'}`,
+  roadmapNext: 'Niveau suivant',
+  roadmapPrev: 'Niveau précédent',
+  roadmapHintDesktop: '▲ / ▼ : se déplacer · Entrée : jouer',
+  roadmapHintTouch: '▲ / ▼ ou touchez le cercle voulu',
+  blockedEnd: 'Fin de la route',
 };
