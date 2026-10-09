@@ -1,16 +1,19 @@
 // Roadmap screen (3D): hosts <canvas id="roadmap-scene"> inside #screen, builds the serpentine
 // track, drives the small red car, and wires navigation/start. The old flat DOM list is gone.
+// Navigation and level start are scene-fail-safe: if the 3D scene cannot be created (bad GPU,
+// blocked WebGL) the buttons/keys still work and the level still starts.
 import { STRINGS } from './strings.fr.js';
 import { playBlocked } from '../audio.js';
 import { createRoadmapControl } from '../input/roadmap-control.js';
 
 export async function showRoadmap({ order, challenges, roadmap, onStartLevel }) {
   const canvas = document.getElementById('roadmap-scene');
-  const [layoutMod, sceneMod, modelsMod] = await Promise.all([
-    import('../render/roadmap-layout.js'),
-    import('../render/roadmap-scene.js'),
-    import('../render/models.js'),
-  ]);
+
+  // Screen chrome is wired before the scene so the page is never left with no controls.
+  const [title, subtitle, pill, actions, hint, playBtn, prevBtn, nextBtn] = [
+    'roadmap-title', 'roadmap-subtitle', 'roadmap-pill', 'roadmap-actions',
+    'roadmap-hint', 'roadmap-play', 'roadmap-prev', 'roadmap-next',
+  ].map((id) => document.getElementById(id));
 
   const byId = new Map(challenges.map((c) => [c.id, c]));
   const stopsById = new Map(roadmap.stops.map((s) => [s.id, s]));
@@ -20,14 +23,19 @@ export async function showRoadmap({ order, challenges, roadmap, onStartLevel }) 
     const challenge = byId.get(id);
     return { id, difficulty: challenge.difficulty };
   });
-
-  const track = layoutMod.buildTrack(levels);
   const nodeStates = order.map((id) => {
     const stop = stopsById.get(id);
     return { locked: !stop.unlocked, solved: stop.solved, current: stop.current };
   });
 
-  // Small red car clone of the game's car model (best-effort: the roadmap still works without it).
+  const [layoutMod, sceneMod, modelsMod] = await Promise.all([
+    import('../render/roadmap-layout.js'),
+    import('../render/roadmap-scene.js'),
+    import('../render/models.js'),
+  ]);
+  const track = layoutMod.buildTrack(levels);
+
+  // Best-effort car clone: the roadmap still works without it.
   let carModel = null;
   try {
     const templates = await modelsMod.loadVehicleTemplates();
@@ -39,27 +47,25 @@ export async function showRoadmap({ order, challenges, roadmap, onStartLevel }) 
     carModel = null;
   }
 
-  const scene = sceneMod.createRoadmapScene(canvas, {
-    nodes: track.nodes,
-    path: track.path,
-    segments: track.segments,
-    nodePointIndex: track.nodePointIndex,
-    bounds: track.bounds,
-    carModel,
-  });
-  scene.setStates(nodeStates);
-  scene.setCurrent(roadmap.currentIndex);
-  scene.setOnArrive((index) => updateUi(index));
-
-  // Screen chrome ----------------------------------------------------------
-  const title = document.getElementById('roadmap-title');
-  const subtitle = document.getElementById('roadmap-subtitle');
-  const pill = document.getElementById('roadmap-pill');
-  const actions = document.getElementById('roadmap-actions');
-  const hint = document.getElementById('roadmap-hint');
-  const playBtn = document.getElementById('roadmap-play');
-  const prevBtn = document.getElementById('roadmap-prev');
-  const nextBtn = document.getElementById('roadmap-next');
+  // Scene is optional: anything below must work with scene === null.
+  let scene = null;
+  try {
+    scene = sceneMod.createRoadmapScene(canvas, {
+      nodes: track.nodes,
+      path: track.path,
+      segments: track.segments,
+      nodePointIndex: track.nodePointIndex,
+      bounds: track.bounds,
+      carModel,
+    });
+    scene.setStates(nodeStates);
+    scene.setCurrent(roadmap.currentIndex);
+    scene.setOnArrive((index) => updateUi(index));
+    scene.start();
+  } catch (error) {
+    console.warn('[roadmap] 3D scene unavailable, running in fallback mode:', error?.message ?? error);
+    scene = null;
+  }
 
   title.textContent = STRINGS.appTitle;
   subtitle.textContent = STRINGS.roadmapTitle;
@@ -68,6 +74,8 @@ export async function showRoadmap({ order, challenges, roadmap, onStartLevel }) 
   hint.hidden = false;
   const coarse = globalThis.matchMedia?.('(pointer: coarse)').matches ?? false;
   hint.textContent = coarse ? STRINGS.roadmapHintTouch : STRINGS.roadmapHintDesktop;
+
+  let fallbackIndex = roadmap.currentIndex;
 
   function updateUi(index) {
     const id = order[index];
@@ -78,32 +86,40 @@ export async function showRoadmap({ order, challenges, roadmap, onStartLevel }) 
   }
   updateUi(roadmap.currentIndex);
 
+  const carIndex = () => (scene ? scene.carIndex() : fallbackIndex);
+  const isTraveling = () => Boolean(scene?.isTraveling());
+
   function stepTo(direction) {
-    if (scene.isTraveling()) return; // queue-once: ignored while driving (never rests on a line)
-    const current = scene.carIndex();
+    if (isTraveling()) return; // queue-once: ignored while driving (never rests on a line)
+    const current = carIndex();
     const next = current + direction;
     if (next < 0 || next > border) {
       playBlocked();
       return;
     }
-    scene.travel(current, next);
+    if (scene) {
+      scene.travel(current, next);
+    } else {
+      fallbackIndex = next;
+      updateUi(next);
+    }
   }
 
   function startCurrent() {
-    onStartLevel(order[scene.carIndex()]);
+    onStartLevel(order[carIndex()]);
   }
 
   const control = createRoadmapControl({ onStep: stepTo, onStart: startCurrent });
 
   const onCanvasClick = (event) => {
-    const index = scene.pickNode(event.clientX, event.clientY);
-    if (index == null || scene.isTraveling()) return;
-    if (index === scene.carIndex()) {
+    const index = scene?.pickNode(event.clientX, event.clientY);
+    if (index == null || isTraveling()) return;
+    if (index === carIndex()) {
       startCurrent(); // clicking the resting node starts the level
       return;
     }
     if (index > border) return; // locked nodes are unreachable
-    scene.travel(scene.carIndex(), index);
+    scene.travel(carIndex(), index);
   };
   canvas.addEventListener('click', onCanvasClick);
   playBtn.addEventListener('click', startCurrent);
@@ -112,17 +128,15 @@ export async function showRoadmap({ order, challenges, roadmap, onStartLevel }) 
 
   if (new URLSearchParams(location.search).has('test')) {
     globalThis.__rushHourRoadmap = {
-      currentIndex: () => scene.carIndex(),
-      carIndex: () => scene.carIndex(),
+      currentIndex: () => carIndex(),
+      carIndex: () => carIndex(),
       nodeCount: () => order.length,
       nodeStates: () => nodeStates,
-      isTraveling: () => scene.isTraveling(),
-      hasRing: () => scene.hasRing(),
+      isTraveling,
+      hasRing: () => Boolean(scene?.hasRing()),
       startLevel: (index) => onStartLevel(order[index]),
     };
   }
-
-  scene.start();
 
   return {
     dispose() {
@@ -131,7 +145,7 @@ export async function showRoadmap({ order, challenges, roadmap, onStartLevel }) 
       playBtn.removeEventListener('click', startCurrent);
       prevBtn.removeEventListener('click', () => stepTo(-1));
       nextBtn.removeEventListener('click', () => stepTo(1));
-      scene.dispose();
+      scene?.dispose();
     },
   };
 }

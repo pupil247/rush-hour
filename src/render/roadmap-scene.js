@@ -248,6 +248,8 @@ export function createRoadmapScene(canvas, options) {
       stopped = false;
       resize();
       window.addEventListener('resize', resize);
+      // Re-measure after the first layout pass (canvas may size in late).
+      requestAnimationFrame(resize);
       raf = requestAnimationFrame(step);
     },
     stop() {
